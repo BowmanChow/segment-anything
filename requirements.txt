@@ -1,0 +1,4 @@
+PyQt5
+matplotlib
+pip uninstall opencv-python
+pip install --no-binary opencv-python opencv-python
