@@ -14,6 +14,7 @@ from PIL import Image
 import xml.etree.ElementTree as ET
 import pathlib
 from glob import glob
+import imghdr
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "7"
 
@@ -169,6 +170,8 @@ class ClickLabel(QLabel):
 
     def save_masks(self, label_name: str):
         assert self.file_name is not None
+        if len(self.masks) == 0:
+            return
         mask = np.zeros(self.masks[0].shape, dtype=np.uint8)
         for i, m in enumerate(self.masks, start=1):
             mask = np.where(m, i, mask)
@@ -306,7 +309,7 @@ class MainWindow(QMainWindow):
 
         self.file_model = FileDataModel()
         self.file_model.setRootPath(images_path)
-        self.proxyModel = HideFileTypesProxy(excludes=[".label.png", ".xml"], parent=self)
+        self.proxyModel = HideFileTypesProxy(excludes=[".label.png", ".xml", ".npy"], parent=self)
         self.proxyModel.setDynamicSortFilter(True)
         self.proxyModel.setSourceModel(self.file_model)
         self.file_list_view = QTableView()
@@ -326,7 +329,11 @@ class MainWindow(QMainWindow):
             print(f"Table select {ix.row() = }  {ix.column() = }")
             value = ix.sibling(ix.row(), ix.column()).data()
             print(f"Table select {value = }")
+            if not isinstance(value, str):
+                return
             file_path = os.path.join(self.file_model.rootPath(), value)
+            if imghdr.what(file_path) is None:
+                return
             self.img_label.set_image(file_path)
             return
 
