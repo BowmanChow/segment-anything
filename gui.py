@@ -1,11 +1,12 @@
 import sys
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "7"
 import typing
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtGui import QPixmap, QPainter, QPen, QImage, QColor
 from PyQt5.QtCore import Qt, QPoint, QRect, QModelIndex, QSortFilterProxyModel
 from PyQt5.QtWidgets import QWidget, QApplication, QLabel, QMainWindow, QTextEdit, QVBoxLayout, QScrollArea, QHBoxLayout, QPushButton, QFileSystemModel, QListView, QSplitter, QLineEdit, QTableView
 
-import os
 from segment_anything import sam_model_registry, SamPredictor
 import numpy as np
 import cv2
@@ -16,7 +17,6 @@ import pathlib
 from glob import glob
 import imghdr
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "7"
 
 images_path = "<your-path-to-input-images>"
 
